@@ -1,0 +1,114 @@
+<div class="container">
+  <div class="row justify-content-between">
+    <h2>Profesores</h2>
+    <button class="btn btn-lg btn-primary" id="btnOpenModal" [disabled]="!btnAgregarProfesor" (click)="open(content)">
+      Agregar profesor
+    </button>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Nombre</th>
+        <th scope="col">Apellido</th>
+        <th scope="col">Email</th>
+        <th scope="col">Contraseña</th>
+        <th scope="col">Acciones</th>
+      </tr>
+    </thead>
+    <td colspan="5" *ngIf="profesores.length == 0">
+      <app-spinner></app-spinner>
+    </td>
+    <tbody *ngIf="profesores.length > 0">
+      <tr *ngFor="let profesor of profesores">
+        <td> {{ profesor.nombre}} </td>
+        <td> {{ profesor.apellido}} </td>
+        <td> {{ profesor.email }} </td>
+        <td> {{ profesor.password }} </td>
+        <td>
+          <button (click)="open(content, this.profesor)" class="btn btn-primary"> Editar</button>
+          <button (click)="eliminarProfesor(this.profesor)" class="btn btn-danger">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div>
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        <li [className]="prevPageButton ? 'page-item': 'page-item disabled'">
+          <a (click)="getProfesoresPage(this.page - 1)" style="cursor:pointer" class="page-link">Previous</a>
+        </li>
+        <li style="cursor:pointer" *ngFor="let link of links"
+          [className]="link.active ? 'page-item active' : 'page-item'">
+          <a (click)="getProfesoresPage(link.label)" class="page-link"> {{ link.label }} </a>
+        </li>
+        <li [className]="lastPageButton ? 'page-item': 'page-item disabled'">
+          <a style="cursor:pointer;" class="page-link" (click)="getProfesoresPage(this.page + 1)">Next</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<!-- Modal -->
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title"> {{ tituloModal}} </h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="profesorForm">
+      <div class="row">
+        <div class="col">
+          <label class="form-label">Nombre</label>
+          <input id="input_nombre" formControlName="nombre" type="text" class="form-control" placeholder="Ingrese nombre...">
+          <div *ngIf="profesorForm.get('nombre')?.errors && profesorForm.get('nombre')?.touched"
+            class="invalid-feedback">
+            <span *ngIf="profesorForm.get('nombre')?.hasError('required')">Nombre no puede estar vacío </span>
+          </div>
+        </div>
+        <div class="col">
+          <label class="form-label">Apellido</label>
+          <input formControlName="apellido" type="text" class="form-control" placeholder="Ingrese apellido...">
+          <div *ngIf="profesorForm.get('apellido')?.errors && profesorForm.get('apellido')?.touched"
+            class="invalid-feedback">
+            <span *ngIf="profesorForm.get('apellido')?.hasError('required')">El apellido no puede estar vacío </span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="mb-3 col-md-12">
+            <label class="form-label">Email</label>
+            <input formControlName="email" class="form-control" type="email" placeholder="Ingrese el mail">
+            <div *ngIf="profesorForm.get('email')?.errors && profesorForm.get('email')?.touched"
+              class="invalid-feedback">
+              <span *ngIf="profesorForm.get('email')?.hasError('required')">El mail no puede estar vacío</span>
+              <span *ngIf="profesorForm.get('email')?.hasError('email')">Mail invalido</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="mb-3 col-md-12">
+            <label class="form-label">Contraseña</label>
+            <input formControlName="password" class="form-control" type="password"
+              placeholder="Ingrese una contraseña...">
+            <div *ngIf="profesorForm.get('password')?.errors && profesorForm.get('password')?.touched"
+              class="invalid-feedback">
+              <span *ngIf="profesorForm.get('password')?.hasError('required')">La contraseña no puede estar vacía</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button (click)="agregarProfesor()" [disabled]="!profesorForm.valid" type="button"
+      class="btn btn-primary">Guardar</button>
+    <button type="button" class="btn btn-danger" (click)="modal.close('Save click')">Cancelar</button>
+  </div>
+</ng-template>

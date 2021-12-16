@@ -1,0 +1,29 @@
+<div class="container mt-3">
+    <form [formGroup]="loginForm"class="row g-3">
+        <div class="col-md-12">
+            <label class="form-label">Email</label>
+            <input formControlName="email" id="inputEmail" class="form-control">
+            <div *ngIf="loginForm.get('email')?.errors && loginForm.get('email')?.touched">
+                <span *ngIf="loginForm.get('email')?.hasError('required')">Email no puede estar vacío </span>
+                <span *ngIf="loginForm.get('email')?.hasError('email')">No es un email</span>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <label for="inputPassword4" class="form-label">Password</label>
+            <input formControlName="password" type="password" class="form-control">
+        </div>
+        <div class="col-12">
+            <button type="submit" (click)="submit()" class="btn btn-primary">Entrar</button>
+        </div>
+    </form>
+</div>
+
+<!-- <swal
+  #deleteSwal
+  title="Delete {{ file.name }}?"
+  text="This cannot be undone"
+  icon="question"
+  [showCancelButton]="true"
+  [focusCancel]="true"
+  (confirm)="deleteFile(file)">
+</swal> -->

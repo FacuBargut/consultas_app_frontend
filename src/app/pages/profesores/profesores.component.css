@@ -1,0 +1,7 @@
+.row>*{
+    width: 20% !important;
+}
+
+.invalid-feedback{
+    display: block;
+}
