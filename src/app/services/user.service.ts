@@ -38,9 +38,23 @@ export class UserService {
     )
   }
 
+  getAlumnos(){
+    return this.httpClient.get(this.apiUrl + 'usuarios/alumnos')
+    .pipe(
+      catchError(this.errorHandler)
+    )
+  }
+
 
   getProfesoresPage(page:number){
     return this.httpClient.get(this.apiUrl + 'usuarios/docentes?page='+page)
+    .pipe(
+      catchError(this.errorHandler)
+    )
+  }
+
+  getAlumnosPage(page:number){
+    return this.httpClient.get(this.apiUrl + 'usuarios/alumnos?page='+page)
     .pipe(
       catchError(this.errorHandler)
     )
@@ -61,7 +75,35 @@ export class UserService {
     )
   }
 
+  agregarAlumno(alumno:any): Observable<any>{
+    return this.httpClient.post<User>(this.apiUrl + 'usuarios', JSON.stringify(alumno), this.httpOptions)
+    .pipe(
+      catchError(this.errorHandler)
+    )
+  }
+
+  editarProfesor(id:number, profesor:any): Observable<any>{
+    return this.httpClient.put<User>(this.apiUrl + `usuarios/${id}`, JSON.stringify(profesor), this.httpOptions)
+    .pipe(
+      catchError(this.errorHandler)
+    )
+  }
+
+  editarAlumno(id:number, alumno:any): Observable<any>{
+    return this.httpClient.put<User>(this.apiUrl + `usuarios/${id}`, JSON.stringify(alumno), this.httpOptions)
+    .pipe(
+      catchError(this.errorHandler)
+    )
+  }
+
   eliminarProfesor(id:number){
+    return this.httpClient.delete<User>(this.apiUrl + `usuarios/${id}`, this.httpOptions)
+    .pipe(
+      catchError(this.errorHandler)
+    )
+  }
+
+  eliminarAlumno(id:number){
     return this.httpClient.delete<User>(this.apiUrl + `usuarios/${id}`, this.httpOptions)
     .pipe(
       catchError(this.errorHandler)

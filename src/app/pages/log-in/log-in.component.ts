@@ -16,12 +16,6 @@ import { SweetAlertsService } from 'src/app/components/sweetAlerts/sweet-alerts.
   styleUrls: ['./log-in.component.css']
 })
 export class LogInComponent implements OnInit {
-  // @ViewChild('deleteSwal')
-
-
-  // public readonly deleteSwal!: SwalComponent;
-
-
 
   loginForm!: FormGroup
   constructor( private formBuilder: FormBuilder,

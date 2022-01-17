@@ -1,4 +1,26 @@
 
 <div class="container">
-  <full-calendar [options]="calendarOptions"></full-calendar>
+  <full-calendar [options]="calendarOptions"
+  ></full-calendar>
 </div>
+
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title"> asdsadsad </h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+ dasdasdasds
+  </div>
+  <div class="modal-footer">
+    asdsadadsad
+  </div>
+</ng-template>
+
+
+
+<input *ngIf="permission == 1" type="file" (change)="onFileChange($event)" multiple="false">
+<button (click)="cargarHorarios()" class="btn btn-primary">Cargar Horarios</button>

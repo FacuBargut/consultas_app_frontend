@@ -1,0 +1,117 @@
+<div class="container">
+    <div class="row justify-content-between">
+      <h2>Alumnos</h2>
+      <button class="btn btn-lg btn-primary" id="btnOpenModal" [disabled]="!btnAgregarAlumno" (click)="open(content)">
+        Agregar alumno
+      </button>
+    </div>
+  
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Nombre</th>
+          <th scope="col">Apellido</th>
+          <th scope="col">Email</th>
+          <th class="text-center" scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <td colspan="5" *ngIf="alumnos.length == 0 && total === undefined">
+        <app-spinner></app-spinner>
+      </td>
+      <td style="text-align: center;" colspan="5" *ngIf="total === 0">
+        <h5>No hay alumnos cargados</h5>
+      </td>
+      <tbody *ngIf="alumnos.length > 0">
+        <tr *ngFor="let alumno of alumnos">
+          <td> {{ alumno.nombre}} </td>
+          <td> {{ alumno.apellido}} </td>
+          <td> {{ alumno.email }} </td>
+          <td class="text-center">
+            <button (click)="open(content, this.alumno)" class="btn btn-primary"> <fa-icon [icon]="faUserEdit"></fa-icon></button>
+            <button (click)="eliminarAlumno(this.alumno)" class="btn btn-danger"><fa-icon [icon]="faTrash"></fa-icon></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div>
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li [className]="prevPageButton ? 'page-item': 'page-item disabled'">
+            <a (click)="getAlumnosPage(this.page - 1)" style="cursor:pointer" class="page-link">Previous</a>
+          </li>
+          <li style="cursor:pointer" *ngFor="let link of links"
+            [className]="link.active ? 'page-item active' : 'page-item'">
+            <a (click)="getAlumnosPage(link.label)" class="page-link"> {{ link.label }} </a>
+          </li>
+          <li [className]="lastPageButton ? 'page-item': 'page-item disabled'">
+            <a style="cursor:pointer;" class="page-link" (click)="getAlumnosPage(this.page + 1)">Next</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+  
+  <!-- Modal -->
+  <ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title"> {{ tituloModal}} </h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="alumnoForm">
+        <div class="row">
+          <div class="col">
+            <label class="form-label">Nombre</label>
+            <input id="input_nombre" formControlName="nombre" type="text" class="form-control" placeholder="Ingrese nombre...">
+            <div *ngIf="alumnoForm.get('nombre')?.errors && alumnoForm.get('nombre')?.touched"
+              class="invalid-feedback">
+              <span *ngIf="alumnoForm.get('nombre')?.hasError('required')">Nombre no puede estar vacío </span>
+            </div>
+          </div>
+          <div class="col">
+            <label class="form-label">Apellido</label>
+            <input formControlName="apellido" type="text" class="form-control" placeholder="Ingrese apellido...">
+            <div *ngIf="alumnoForm.get('apellido')?.errors && alumnoForm.get('apellido')?.touched"
+              class="invalid-feedback">
+              <span *ngIf="alumnoForm.get('apellido')?.hasError('required')">El apellido no puede estar vacío </span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="mb-3 col-md-12">
+              <label class="form-label">Email</label>
+              <input formControlName="email" class="form-control" type="email" placeholder="Ingrese el mail">
+              <div *ngIf="alumnoForm.get('email')?.errors && alumnoForm.get('email')?.touched"
+                class="invalid-feedback">
+                <span *ngIf="alumnoForm.get('email')?.hasError('required')">El mail no puede estar vacío</span>
+                <span *ngIf="alumnoForm.get('email')?.hasError('email')">Mail invalido</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!modoEdicion" class="row">
+          <div class="col">
+            <div class="mb-3 col-md-12">
+              <label class="form-label">Contraseña</label>
+              <input formControlName="password" class="form-control" type="password"
+                placeholder="Ingrese una contraseña...">
+              <div *ngIf="alumnoForm.get('password')?.errors && alumnoForm.get('password')?.touched"
+                class="invalid-feedback">
+                <span *ngIf="alumnoForm.get('password')?.hasError('required')">La contraseña no puede estar vacía</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button (click)="gestionarAlumno(this.modoEdicion)" [disabled]="!alumnoForm.valid" type="submit"
+        class="btn btn-primary">Guardar</button>
+      <button type="button" class="btn btn-danger" (click)="modal.close('Save click')">Cancelar</button>
+    </div>
+  </ng-template>
+  
+  

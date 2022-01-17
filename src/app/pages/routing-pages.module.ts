@@ -5,6 +5,7 @@ import { MainComponent } from "./main/main.component";
 
 import { AuthGuard } from "../shared/guards/auth.guard";
 import { ProfesoresComponent } from "./profesores/profesores.component";
+import { AlumnosComponent } from "./alumnos/alumnos.component";
 
 const routes: Routes = [
   {
@@ -22,6 +23,14 @@ const routes: Routes = [
       {
         path: 'profesores',
         component: ProfesoresComponent,
+      },
+      {
+        path: 'alumnos',
+        component: AlumnosComponent,
+      },
+      {
+        path: '**',
+        component: MainComponent,
       }
     ]
   }

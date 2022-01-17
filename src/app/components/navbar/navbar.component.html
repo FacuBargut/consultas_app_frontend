@@ -4,7 +4,7 @@
             <a *ngIf="!loggedIn" (click)="toggleHamburguer()" [routerLink]="['/logIn']" class="nav-link">Log In</a>
             <a *ngIf="loggedIn" (click)="logOut()" [routerLink]="['/main']" class="nav-link">Log Out</a>
             <a *ngIf="loggedIn && permission == 1" (click)="toggleHamburguer()" [routerLink]="['/profesores']" class="nav-link">Profesores</a>
-            <a *ngIf="loggedIn && permission == 1" [routerLink]="['/alumnos']" class="nav-link">Alumnos</a>
+            <a *ngIf="loggedIn && permission == 1" (click)="toggleHamburguer()" [routerLink]="['/alumnos']" class="nav-link">Alumnos</a>
         </li>
     </ul>
 

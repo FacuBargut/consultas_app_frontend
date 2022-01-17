@@ -4,59 +4,59 @@ import { UserService } from 'src/app/services/user.service';
 import {NgbModal, ModalDismissReasons, NgbModalConfig} from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 
+import { faTrash, faUserEdit } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-profesores',
-  templateUrl: './profesores.component.html',
-  styleUrls: ['./profesores.component.css']
+  selector: 'app-alumnos',
+  templateUrl: './alumnos.component.html',
+  styleUrls: ['./alumnos.component.css']
 })
-export class ProfesoresComponent implements OnInit {
+export class AlumnosComponent implements OnInit {
 
-  profesorForm: FormGroup
+  alumnoForm: FormGroup
 
-  constructor(private userService: UserService,
+  constructor(
+              private userService: UserService,
               private modalService: NgbModal,
               private formBuilder: FormBuilder,
-              config: NgbModalConfig,
-              private activatedRoute: ActivatedRoute) {
-
+              config: NgbModalConfig
+  ) { 
 
               config.backdrop = 'static';
               config.keyboard = false;
-
-              this.profesorForm = this.formBuilder.group({
+              this.alumnoForm = this.formBuilder.group({
                 id: [''],
                 nombre:[ '', [Validators.required]],
                 apellido: [ '', Validators.required],
                 email: ['', [Validators.required, Validators.email]],
-                password: ['',]
+                password: ['']
               })
-
-               }
-
-  profesores : User[] = []
-  btnAgregarProfesor = false;
+  }
+  faTrash = faTrash
+  faUserEdit = faUserEdit
+  alumnos : User[] = []
+  btnAgregarAlumno = false;
   closeResult = '';
   tituloModal = "";
   page:number = 1;
   modoEdicion:boolean = false;
   lastPageButton: boolean = false;
   prevPageButton: boolean = false;
+  total!:number;
   links: any[] = [];
 
-
   ngOnInit(): void {
-    this.getProfesoresPage(1);
+    this.getAlumnosPage(1);
   }
 
-  getProfesoresPage(page:number){
-    this.userService.getProfesoresPage(page).subscribe(
+  getAlumnosPage(page:number){
+    this.userService.getAlumnosPage(page).subscribe(
       (res:any)=>{
         console.log(res)
-        this.profesores = res.data;
-        this.btnAgregarProfesor = true;
+        this.total = res.total;
+        this.alumnos = res.data;
+        this.btnAgregarAlumno = true;
         this.page = res.current_page;
         this.obtenerBotonera(res.links)
         this.validarBotones(res.prev_page_url,res.next_page_url);
@@ -67,28 +67,29 @@ export class ProfesoresComponent implements OnInit {
     )
   }
   
-  editarProfesor(profesor: User){
+  editarAlumno(alumno: User){
     this.modoEdicion = true;
-    this.profesorForm.patchValue(profesor)
+    this.alumnoForm.patchValue(alumno)
   }
 
-  gestionarProfesor(modo:boolean){
-    let oProfesor ={
-      id: this.profesorForm.controls['id'].value,
-      nombre: this.profesorForm.controls['nombre'].value,
-      apellido: this.profesorForm.controls['apellido'].value,
-      email: this.profesorForm.controls['email'].value,
-      password: this.profesorForm.controls['password'].value,
-      id_rol: 2
+  gestionarAlumno(modo:boolean){
+    let oAlumno ={
+      id: this.alumnoForm.controls['id'].value,
+      nombre: this.alumnoForm.controls['nombre'].value,
+      apellido: this.alumnoForm.controls['apellido'].value,
+      email: this.alumnoForm.controls['email'].value,
+      password: this.alumnoForm.controls['password'].value,
+      id_rol: 3
     }
     if(modo === false){
-      this.userService.agregarProfesor(oProfesor).subscribe(
+      this.userService.agregarAlumno(oAlumno).subscribe(
         res=>{
+          console.log(res)
           if(res.status == 201){
-              if(this.profesores.length === 5){
-                this.getProfesoresPage(this.page + 1)
+              if(this.alumnos.length === 5){
+                this.getAlumnosPage(this.page + 1)
               }else{
-                this.getProfesoresPage(this.page)
+                this.getAlumnosPage(this.page)
               }
               this.modalService.dismissAll();
           }
@@ -111,13 +112,11 @@ export class ProfesoresComponent implements OnInit {
         }
       )
     }else{
-      delete oProfesor.password;
-      console.log(oProfesor)
-      this.userService.editarProfesor(oProfesor.id,oProfesor).subscribe(
+      this.userService.editarAlumno(oAlumno.id,oAlumno).subscribe(
         res=>{
           console.log(res)
           this.modalService.dismissAll();
-          this.getProfesoresPage(this.page);
+          this.getAlumnosPage(this.page);
         },
         error=>{
           Swal.fire({
@@ -139,10 +138,10 @@ export class ProfesoresComponent implements OnInit {
     }
   }
 
-  eliminarProfesor(profesor:User){
+  eliminarAlumno(alumno:User){
       Swal.fire({
-        title: 'Eliminar profesor!',
-        text: `Quiere eliminar al profesor ${profesor.nombre} ${profesor.apellido}? `,
+        title: 'Eliminar alumno!',
+        text: `Quiere eliminar al alumno ${alumno.nombre} ${alumno.apellido}? `,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -152,18 +151,18 @@ export class ProfesoresComponent implements OnInit {
       }).then((result) => {
         if (result.isConfirmed) {
 
-          this.userService.eliminarProfesor(profesor.id).subscribe(
+          this.userService.eliminarAlumno(alumno.id).subscribe(
             res =>{
               Swal.fire(
                 'Eliminado',
-                `El profesor ${profesor.nombre} ${profesor.apellido} fue eliminado `,
+                `El alumno ${alumno.nombre} ${alumno.apellido} fue eliminado `,
                 'success'
               )
               
-              if(this.profesores.length === 1){
-                this.getProfesoresPage(this.page - 1);
+              if(this.alumnos.length === 1){
+                this.getAlumnosPage(this.page - 1);
               }else{
-                this.getProfesoresPage(this.page);
+                this.getAlumnosPage(this.page);
               }
             },
             error =>{
@@ -175,33 +174,31 @@ export class ProfesoresComponent implements OnInit {
       })
   }
 
-  open(content:any, profesor?:any) {
-    this.profesorForm.reset();
-    this.profesorForm.updateValueAndValidity();
+  open(content:any, alumno?:any) {
+    this.alumnoForm.reset();
+    this.alumnoForm.updateValueAndValidity();
     this.modoEdicion = false;
     setTimeout(() => {
       document.getElementById('input_nombre')?.focus();
     }, 500);
 
-    this.tituloModal = "Agregar profesor";
-    this.profesorForm.setValue({
+    this.tituloModal = "Agregar alumno";
+    this.alumnoForm.setValue({
       id: '',
       nombre: '',
       apellido: '',
       email: '',
       password: ''
     })
-    if(profesor !== undefined){
-      this.tituloModal = "Editar profesor";
-      this.editarProfesor(profesor);
+    if(alumno !== undefined){
+      this.tituloModal = "Editar alumno";
+      this.editarAlumno(alumno);
     }
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
-
-    console.log(this.modoEdicion)
   }
 
   private getDismissReason(reason: any): string {
@@ -234,4 +231,5 @@ export class ProfesoresComponent implements OnInit {
       this.prevPageButton = true
     }
   }
+
 }

@@ -12,7 +12,6 @@
         <th scope="col">Nombre</th>
         <th scope="col">Apellido</th>
         <th scope="col">Email</th>
-        <th scope="col">Contraseña</th>
         <th scope="col">Acciones</th>
       </tr>
     </thead>
@@ -24,7 +23,6 @@
         <td> {{ profesor.nombre}} </td>
         <td> {{ profesor.apellido}} </td>
         <td> {{ profesor.email }} </td>
-        <td> {{ profesor.password }} </td>
         <td>
           <button (click)="open(content, this.profesor)" class="btn btn-primary"> Editar</button>
           <button (click)="eliminarProfesor(this.profesor)" class="btn btn-danger">Eliminar</button>
@@ -91,7 +89,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <div *ngIf="!modoEdicion" class="row">
         <div class="col">
           <div class="mb-3 col-md-12">
             <label class="form-label">Contraseña</label>
@@ -107,8 +105,9 @@
     </form>
   </div>
   <div class="modal-footer">
-    <button (click)="agregarProfesor()" [disabled]="!profesorForm.valid" type="button"
+    <button (click)="gestionarProfesor(this.modoEdicion)" [disabled]="!profesorForm.valid" type="button"
       class="btn btn-primary">Guardar</button>
     <button type="button" class="btn btn-danger" (click)="modal.close('Save click')">Cancelar</button>
   </div>
 </ng-template>
+

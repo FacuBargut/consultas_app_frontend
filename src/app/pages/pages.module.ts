@@ -8,11 +8,13 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 //Modulos
 import { RoutingPagesModule } from './routing-pages.module';
 import { ComponentsModule } from '../components/components.module';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 //Componentes
 import { LogInComponent } from './log-in/log-in.component';
 import { MainComponent } from './main/main.component';
 import { ProfesoresComponent } from './profesores/profesores.component';
+import { AlumnosComponent } from './alumnos/alumnos.component';
 
 //Modulos para el calendario
 import { FlatpickrModule } from 'angularx-flatpickr';
@@ -26,7 +28,8 @@ import { NgbModalModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
   declarations: [
     LogInComponent,
     MainComponent,
-    ProfesoresComponent
+    ProfesoresComponent,
+    AlumnosComponent
   ],
   imports: [
     CommonModule,
@@ -41,7 +44,8 @@ import { NgbModalModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
     FormsModule,
     FullCalendarModule,
     ComponentsModule,
-    NgbModule
+    NgbModule,
+    FontAwesomeModule
   ]
 })
 export class PagesModule { }
